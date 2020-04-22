@@ -18,4 +18,5 @@ If you want to run any program compiled under slurm system, please modify the `r
 | Methods | Wall Time |
 |-|-|
 | Baseline | 7.146458s |
-| Easyopt (8 threads) | 0.458212s |
+| Easy opt (8 threads) | 0.458212s |
+| Operator opt (8 threads) | 0.253401s |

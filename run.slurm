@@ -9,4 +9,4 @@
 #SBATCH -t 30:00
 
 export OMP_NUM_THREADS=8
-./baseline-easyopt.out
+./operator-opt.out
