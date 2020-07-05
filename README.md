@@ -39,4 +39,6 @@ So I simply use pointers to avoid `imul` instruction.
 |-|-|
 | Baseline | 7.146458s |
 | Easy opt (8 threads) | 0.458212s |
-| Operator opt (8 threads) | 0.253401s |
+| Operator opt (8 threads) | 0.181064s |
+| Loop Collapse (8 threads) | 0.168586s |
+| Assembly (8 threads) | 0.148757s |

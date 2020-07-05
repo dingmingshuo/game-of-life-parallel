@@ -38,7 +38,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // naive implementation
     time = get_walltime();
     for (t = 0; t < LT; t++) {
 #pragma omp parallel for

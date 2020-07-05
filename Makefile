@@ -1,3 +1,6 @@
+loop-collapse.out: loop-collapse.c
+	gcc -o loop-collapse.out -O3 -fopenmp loop-collapse.c -mavx
+
 operator-opt.out: operator-opt.c
 	gcc -o operator-opt.out -O3 -fopenmp operator-opt.c
 

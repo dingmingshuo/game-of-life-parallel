@@ -14,7 +14,7 @@
 #define SEED 0
 #define LS (L1 * L2)
 
-char world[2][L1 + 2][L2 + 2];
+int world[2][L1 + 2][L2 + 2];
 
 double get_walltime() {
     struct timeval tp;
@@ -39,19 +39,19 @@ int main(int argc, char* argv[]) {
 
     time = get_walltime();
     for (t = 0; t < LT; t++) {
-        char world_d0 = t & 1;
-        char result_d0 = (t + 1) & 1;
+        int world_d0 = t & 1;
+        int result_d0 = (t + 1) & 1;
 
         for (i = 1; i <= L1; i++) {
-            char* wi = world[world_d0][i];
+            int* wi = world[world_d0][i];
             *(wi + 0) = *(wi + L2);
             *(wi + L2 + 1) = *(wi + 1);
         }
 
-        char* wi_0 = world[world_d0][0];
-        char* wi_1 = world[world_d0][1];
-        char* wi_l1 = world[world_d0][L1];
-        char* wi_l1_1 = world[world_d0][L1 + 1];
+        int* wi_0 = world[world_d0][0];
+        int* wi_1 = world[world_d0][1];
+        int* wi_l1 = world[world_d0][L1];
+        int* wi_l1_1 = world[world_d0][L1 + 1];
         for (j = 1; j <= L2; j++) {
             *(wi_0 + j) = *(wi_l1 + j);
             *(wi_l1_1 + j) = *(wi_1 + j);
@@ -63,11 +63,35 @@ int main(int argc, char* argv[]) {
 
 #pragma omp parallel for
         for (i = 1; i <= L1; i++) {
-            char* im = world[world_d0][i - 1];
-            char* in = world[world_d0][i];
-            char* ia = world[world_d0][i + 1];
-            char* r = world[result_d0][i];
-            for (j = 1; j <= L2; j++) {
+            int* im = world[world_d0][i - 1];
+            int* in = world[world_d0][i];
+            int* ia = world[world_d0][i + 1];
+            int* r = world[result_d0][i];
+            for (j = 1; j <= L2 - 4; j += 4) {
+                neighbors = *(im + j - 1) + *(im + j) + *(im + j + 1) +
+                            *(in + j - 1) + *(in + j) + *(in + j + 1) +
+                            *(ia + j - 1) + *(ia + j) + *(ia + j + 1);
+                *(r + j) = (neighbors == 3) || ((neighbors - *(in + j)) == 3);
+
+                neighbors = *(im + j) + *(im + j + 1) + *(im + j + 2) +
+                            *(in + j) + *(in + j + 1) + *(in + j + 2) +
+                            *(ia + j) + *(ia + j + 1) + *(ia + j + 2);
+                *(r + j + 1) =
+                    (neighbors == 3) || ((neighbors - *(in + j + 1)) == 3);
+
+                neighbors = *(im + j + 1) + *(im + j + 2) + *(im + j + 3) +
+                            *(in + j + 1) + *(in + j + 2) + *(in + j + 3) +
+                            *(ia + j + 1) + *(ia + j + 2) + *(ia + j + 3);
+                *(r + j + 2) =
+                    (neighbors == 3) || ((neighbors - *(in + j + 2)) == 3);
+
+                neighbors = *(im + j + 2) + *(im + j + 3) + *(im + j + 4) +
+                            *(in + j + 2) + *(in + j + 3) + *(in + j + 4) +
+                            *(ia + j + 2) + *(ia + j + 3) + *(ia + j + 4);
+                *(r + j + 3) =
+                    (neighbors == 3) || ((neighbors - *(in + j + 3)) == 3);
+            }
+            for (; j <= L2; j++) {
                 neighbors = *(im + j - 1) + *(im + j) + *(im + j + 1) +
                             *(in + j - 1) + *(in + j) + *(in + j + 1) +
                             *(ia + j - 1) + *(ia + j) + *(ia + j + 1);
